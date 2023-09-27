@@ -21,6 +21,9 @@ public class Graphics extends JPanel implements ActionListener {
     Food food;
     int foodEaten;
 
+    private long lastInputTime = 0;
+    private long inputCooldownMillis = 300;
+
     char direction = 'R';
     boolean isMoving = false;
     final Timer timer = new Timer(150, this);
@@ -33,28 +36,32 @@ public class Graphics extends JPanel implements ActionListener {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (isMoving) {
-                    switch (e.getKeyCode()) {
-                        case KeyEvent.VK_LEFT:
-                            if (direction != 'R') {
-                                direction = 'L';
-                            }
-                            break;
-                        case KeyEvent.VK_RIGHT:
-                            if (direction != 'L') {
-                                direction = 'R';
-                            }
-                            break;
-                        case KeyEvent.VK_UP:
-                            if (direction != 'D') {
-                                direction = 'U';
-                            }
-                            break;
-                        case KeyEvent.VK_DOWN:
-                            if (direction != 'U') {
-                                direction = 'D';
-                            }
-                            break;
+                    long currentTime = System.currentTimeMillis();
+                    if (currentTime - lastInputTime >= inputCooldownMillis) {
+                        switch (e.getKeyCode()) {
+                            case KeyEvent.VK_LEFT:
+                                if (direction != 'R') {
+                                    direction = 'L';
+                                }
+                                break;
+                            case KeyEvent.VK_RIGHT:
+                                if (direction != 'L') {
+                                    direction = 'R';
+                                }
+                                break;
+                            case KeyEvent.VK_UP:
+                                if (direction != 'D') {
+                                    direction = 'U';
+                                }
+                                break;
+                            case KeyEvent.VK_DOWN:
+                                if (direction != 'U') {
+                                    direction = 'D';
+                                }
+                                break;
+                        }
                     }
+
                 } else {
                     if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                         start();
@@ -74,7 +81,6 @@ public class Graphics extends JPanel implements ActionListener {
         foodEaten = 0;
         isMoving = true;
         spawnFood();
-        timer.setInitialDelay(0);
         timer.start();
     }
 
@@ -90,8 +96,12 @@ public class Graphics extends JPanel implements ActionListener {
             for (int i = 0; i < snakeLength; i++) {
                 g.fillRect(snakePosX[i], snakePosY[i], TICK_SIZE, TICK_SIZE);
             }
+
+            g.setColor(Color.GREEN);
+            g.setFont(new Font("TimesRoman", Font.BOLD, 25));
+            g.drawString("Score:" + foodEaten, (WIDTH / 2) - 20, 30);
         } else {
-            String scoreText = String.format("The End... Score : %d... Press Space to Restart", foodEaten);
+            String scoreText = String.format("Score : %d... Press Space to Restart", foodEaten);
             g.setColor(Color.WHITE);
             g.setFont(font);
             g.drawString(scoreText, (WIDTH - getFontMetrics(g.getFont()).stringWidth(scoreText)) / 2, HEIGHT / 2);

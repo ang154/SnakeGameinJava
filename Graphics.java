@@ -113,7 +113,7 @@ public class Graphics extends JPanel implements ActionListener {
     }
 
     protected void spawnFood() {
-        food = new Food();
+        food = new Food(snakePosX, snakePosY);
     }
 
     protected void eatFood() {

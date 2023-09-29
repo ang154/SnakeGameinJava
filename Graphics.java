@@ -92,8 +92,14 @@ public class Graphics extends JPanel implements ActionListener {
             g.setColor(Color.RED);
             g.fillOval(food.getPosX(), food.getPosY(), TICK_SIZE, TICK_SIZE);
 
-            g.setColor(Color.LIGHT_GRAY);
+            
             for (int i = 0; i < snakeLength; i++) {
+                if(i == 0){
+                    g.setColor(Color.YELLOW);
+                    g.fillRect(snakePosX[i], snakePosY[i], TICK_SIZE, TICK_SIZE);
+                    continue;
+                }
+                g.setColor(Color.LIGHT_GRAY);
                 g.fillRect(snakePosX[i], snakePosY[i], TICK_SIZE, TICK_SIZE);
             }
 
